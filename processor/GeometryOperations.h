@@ -33,8 +33,8 @@ namespace PolygonOperations {
 }
 
 namespace LayerOperations {
-    LayerPack copyLayerFromLayerPack(const LayerPack& layerpack, const std::string& sourceLayerName, const std::string& targetLayerName);
-    LayerPack copyLayerFromLayerPack(const LayerPack& layerpack1, LayerPack& layerpack2, const std::string& sourceLayerName, const std::string& targetLayerName);
+    void copyLayerFromLayerPack(LayerPack& layerpack, const std::string& sourceLayerName, const std::string& targetLayerName);
+    void copyLayerFromLayerPack(const LayerPack& layerpack1, LayerPack& layerpack2, const std::string& sourceLayerName, const std::string& targetLayerName);
     bool layerIsEmpty(const Layer& layer);
 }
 

@@ -5,8 +5,8 @@ CppApplication {
     files: [
         "Entity.cpp",
         "Entity.h",
+        "GeometryOperations.cpp",
         "GeometryOperations.h",
-        "main.cpp",
     ]
 
     Group {     // Properties for the produced executable
