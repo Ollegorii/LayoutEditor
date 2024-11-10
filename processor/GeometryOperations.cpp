@@ -119,7 +119,7 @@ namespace TrapezoidOperations {
 
             for (const auto& a : trapezoids1) {
                 std::pair<double, double> y_overlap_result = overlapY(b, a);
-                if (y_overlap_result.first < y_overlap_result.second) {
+                if (y_overlap_result.first > y_overlap_result.second) {
                     intersected = true;
                     break;
                 }

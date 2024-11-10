@@ -7,6 +7,7 @@ CppApplication {
         "Entity.h",
         "GeometryOperations.cpp",
         "GeometryOperations.h",
+        "unittest.cpp",
     ]
 
     Group {     // Properties for the produced executable
