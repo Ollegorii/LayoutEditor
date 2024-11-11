@@ -51,25 +51,62 @@ namespace TrapezoidOperations {
     Trapezoid create_trapezoid(double y_top, double y_bottom, const Trapezoid& a, const Trapezoid& b, bool is_union) {
         double x1_top_a = interpolateX(y_top, a.y_top, a.y_bottom, a.x1_top, a.x1_bottom);
         double x1_top_b = interpolateX(y_top, b.y_top, b.y_bottom, b.x1_top, b.x1_bottom);
-        double x1_top = is_union ? std::min(x1_top_a, x1_top_b)
-                                 : std::max(x1_top_a, x1_top_b);
 
         double x2_top_a = interpolateX(y_top, a.y_top, a.y_bottom, a.x2_top, a.x2_bottom);
         double x2_top_b = interpolateX(y_top, b.y_top, b.y_bottom, b.x2_top, b.x2_bottom);
-        double x2_top = is_union ? std::max(x2_top_a, x2_top_b)
-                                 : std::min(x2_top_a, x2_top_b);
 
         double x1_bottom_a = interpolateX(y_bottom, a.y_top, a.y_bottom, a.x1_top, a.x1_bottom);
         double x1_bottom_b = interpolateX(y_bottom, b.y_top, b.y_bottom, b.x1_top, b.x1_bottom);
-        double x1_bottom = is_union ? std::min(x1_bottom_a, x1_bottom_b)
-                                    : std::max(x1_bottom_a, x1_bottom_b);
 
         double x2_bottom_a = interpolateX(y_bottom, a.y_top, a.y_bottom, a.x2_top, a.x2_bottom);
         double x2_bottom_b = interpolateX(y_bottom, b.y_top, b.y_bottom, b.x2_top, b.x2_bottom);
+
+        double x1_top = is_union ? std::min(x1_top_a, x1_top_b)
+                                 : std::max(x1_top_a, x1_top_b);
+
+        double x2_top = is_union ? std::max(x2_top_a, x2_top_b)
+                                 : std::min(x2_top_a, x2_top_b);
+
+        double x1_bottom = is_union ? std::min(x1_bottom_a, x1_bottom_b)
+                                    : std::max(x1_bottom_a, x1_bottom_b);
+
+
         double x2_bottom = is_union ? std::max(x2_bottom_a, x2_bottom_b)
                                     : std::min(x2_bottom_a, x2_bottom_b);
 
         return Trapezoid(x1_top, x2_top, x1_bottom, x2_bottom, y_top, y_bottom);
+
+    }
+
+    std::vector<Trapezoid> create_trapezoids_substructed(double y_top, double y_bottom, const Trapezoid& a, const Trapezoid& b, bool is_substruct=false){
+        std::vector<Trapezoid> result;
+        double x1_top_a = interpolateX(y_top, a.y_top, a.y_bottom, a.x1_top, a.x1_bottom);
+        double x1_top_b = interpolateX(y_top, b.y_top, b.y_bottom, b.x1_top, b.x1_bottom);
+
+        double x2_top_a = interpolateX(y_top, a.y_top, a.y_bottom, a.x2_top, a.x2_bottom);
+        double x2_top_b = interpolateX(y_top, b.y_top, b.y_bottom, b.x2_top, b.x2_bottom);
+
+        double x1_bottom_a = interpolateX(y_bottom, a.y_top, a.y_bottom, a.x1_top, a.x1_bottom);
+        double x1_bottom_b = interpolateX(y_bottom, b.y_top, b.y_bottom, b.x1_top, b.x1_bottom);
+
+        double x2_bottom_a = interpolateX(y_bottom, a.y_top, a.y_bottom, a.x2_top, a.x2_bottom);
+        double x2_bottom_b = interpolateX(y_bottom, b.y_top, b.y_bottom, b.x2_top, b.x2_bottom);
+
+        if(a.x1_bottom < b.x1_bottom){
+            double x1_top = x1_top_a;
+            double x2_top =  std::min(x2_top_a, x1_top_b);
+            double x1_bottom = x1_bottom_a;
+            double x2_bottom = std::min(x2_bottom_a, x1_bottom_b);
+            result.emplace_back(x1_top, x2_top, x1_bottom, x2_bottom, y_top, y_bottom);
+        }
+        else if(a.x2_bottom > b.x2_bottom){
+            double x1_top = std::max(x1_top_a, x2_top_b);
+            double x2_top =  x2_top_a;
+            double x1_bottom = std::max(x1_bottom_a, x2_bottom_b);
+            double x2_bottom = x2_bottom_a;
+            result.emplace_back(x1_top, x2_top, x1_bottom, x2_bottom, y_top, y_bottom);
+        }
+        return result;
     }
 
 
@@ -168,7 +205,7 @@ namespace TrapezoidOperations {
                 double y_top = y_overlap_result.first;
                 double y_bottom = y_overlap_result.second;
 
-                if (y_top < y_bottom) { // Есть пересечение по y
+                if (y_top > y_bottom) { // Есть пересечение по y
                     intersected = true;
 
                     // 1. Добавляем часть до пересечения
@@ -176,7 +213,10 @@ namespace TrapezoidOperations {
                         result.push_back(create_trapezoid(y_bottom, a.y_bottom, a, a, true));
                     }
 
-                    // 2. Перечение пропускаем
+                    // 2. Переcечение
+                    auto trapezoids = create_trapezoids_substructed(y_top, y_bottom, a, b, true);
+                    for(const auto& trap : trapezoids)
+                        result.push_back(trap);
 
                     // 3. Добавляем часть после пересечения
                     if (a.y_top > y_top) {

@@ -39,7 +39,7 @@ void test_unite() {
 
     // Ожидаемый результат для объединения этих трапецоидов
     std::vector<Trapezoid> expected_unite = {
-        Trapezoid(0, 3, 0, 3, 1, 0), // Верхняя часть t1
+        Trapezoid(0, 2, 0, 2, 1, 0), // Верхняя часть t1
         Trapezoid(0, 3, 0, 3, 2, 1), // Перекрывающая часть
         Trapezoid(1, 3, 1, 3, 3, 2)  // Нижняя часть t2
     };
@@ -54,29 +54,40 @@ void test_unite() {
 }
 
 void test_intersect() {
-    Trapezoid t1(0, 2, 0, 2, 0, 2);
-    Trapezoid t2(1, 3, 1, 3, 1, 3);
+    Trapezoid t1(0, 2, 0, 2, 2, 0); // Квадратный трапецоид
+    Trapezoid t2(1, 3, 1, 3, 3, 1); // Наложен частично
 
     // Ожидаемый результат для пересечения
     std::vector<Trapezoid> expected_intersect = {
-        Trapezoid(1, 2, 1, 2, 1, 2)
+        Trapezoid(1, 2, 1, 2, 2, 1)
     };
 
+
     std::vector<Trapezoid> result_intersect = TrapezoidOperations::intersect({t1}, {t2});
+    std::cout << "Intersect = ";
+    for(auto trap : result_intersect)
+    {
+        std::cout << trap.x1_top << " " << trap.x2_top << " " << trap.x1_bottom << " " << trap.x2_bottom << " " << trap.y_top << " " << trap.y_bottom << "\n";
+    }
     assert_equal(result_intersect, expected_intersect, "Intersect Test");
 }
 
 void test_subtract() {
-    Trapezoid t1(0, 2, 0, 2, 0, 2);
-    Trapezoid t2(1, 3, 1, 3, 1, 3);
+    Trapezoid t1(0, 2, 0, 2, 2, 0); // Квадратный трапецоид
+    Trapezoid t2(1, 3, 1, 3, 3, 1); // Наложен частично
 
     // Ожидаемый результат для вычитания
     std::vector<Trapezoid> expected_subtract = {
-        Trapezoid(0, 2, 0, 2, 0, 1), // Верхняя часть t1
-        Trapezoid(0, 2, 0, 2, 1, 2)  // Нижняя часть после пересечения
+        Trapezoid(0, 2, 0, 2, 1, 0),
+        Trapezoid(0, 1, 0, 1, 2, 1)
     };
 
     std::vector<Trapezoid> result_subtract = TrapezoidOperations::subtract({t1}, {t2});
+    std::cout << "Substruct = ";
+    for(auto trap : result_subtract)
+    {
+        std::cout << trap.x1_top << " " << trap.x2_top << " " << trap.x1_bottom << " " << trap.x2_bottom << " " << trap.y_top << " " << trap.y_bottom << "\n";
+    }
     assert_equal(result_subtract, expected_subtract, "Subtract Test");
 }
 
