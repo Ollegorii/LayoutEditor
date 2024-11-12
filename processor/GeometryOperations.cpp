@@ -92,14 +92,14 @@ namespace TrapezoidOperations {
         double x2_bottom_a = interpolateX(y_bottom, a.y_top, a.y_bottom, a.x2_top, a.x2_bottom);
         double x2_bottom_b = interpolateX(y_bottom, b.y_top, b.y_bottom, b.x2_top, b.x2_bottom);
 
-        if(a.x1_bottom < b.x1_bottom){
+        if(a.x1_bottom <= b.x1_bottom){
             double x1_top = x1_top_a;
             double x2_top =  std::min(x2_top_a, x1_top_b);
             double x1_bottom = x1_bottom_a;
             double x2_bottom = std::min(x2_bottom_a, x1_bottom_b);
             result.emplace_back(x1_top, x2_top, x1_bottom, x2_bottom, y_top, y_bottom);
         }
-        else if(a.x2_bottom > b.x2_bottom){
+        else if(a.x2_bottom >= b.x2_bottom){
             double x1_top = std::max(x1_top_a, x2_top_b);
             double x2_top =  x2_top_a;
             double x1_bottom = std::max(x1_bottom_a, x2_bottom_b);
